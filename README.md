@@ -110,14 +110,14 @@ $
 ## Tasks
 ### Mandatory Tasks
 0. #### REAME, AUTHORS
-&emsp; - Write a README.md:
-&emsp;&emsp; > - description of the project
-&emsp;&emsp; > - description of the command interpreter:
-&emsp;&emsp;&emsp;&emsp; > - how to start it
-&emsp;&emsp;&emsp;&emsp; > - how to use it
-&emsp;&emsp;&emsp;&emsp; > - examples
-&emsp; - You should have an AUTHORS file at the root of your repository, listing all individuals having contributed content to the repository. For format, reference Docker’s AUTHORS page(https://github.com/moby/moby/blob/master/AUTHORS)
-&emsp; - You should use branches and pull requests on GitHub - it will help you as team to organize your work
+- &emsp; Write a README.md:
+> - &emsp;&emsp; description of the project
+> - &emsp;&emsp; description of the command interpreter:
+> - &emsp;&emsp;&emsp;&emsp; how to start it
+> - &emsp;&emsp;&emsp;&emsp; how to use it
+> - &emsp;&emsp;&emsp;&emsp; examples
+- &emsp; - You should have an AUTHORS file at the root of your repository, listing all individuals having contributed content to the repository. For format, reference Docker’s AUTHORS page(https://github.com/moby/moby/blob/master/AUTHORS)
+- &emsp; - You should use branches and pull requests on GitHub - it will help you as team to organize your work
 
 &emsp;File(s):
 - &emsp;&emsp;&emsp;[file]() - file description
