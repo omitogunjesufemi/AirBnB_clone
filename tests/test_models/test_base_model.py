@@ -35,7 +35,8 @@ class TestBaseModel(unittest.TestCase):
         """Checking if created_at is not the smae for different instance
         """
         base_model_2 = BaseModel()
-        self.assertNotEqual(self.base_model.created_at, base_model_2.created_at)
+        self.assertNotEqual(self.base_model.created_at,
+                            base_model_2.created_at)
 
     def test_updated_at_is_present(self):
         """Checking if updated_at was initialized
@@ -46,7 +47,8 @@ class TestBaseModel(unittest.TestCase):
         """Checking if updated_at is not the smae for different instance
         """
         base_model_2 = BaseModel()
-        self.assertNotEqual(self.base_model.updated_at, base_model_2.updated_at)
+        self.assertNotEqual(self.base_model.updated_at,
+                            base_model_2.updated_at)
 
     def test_string_representation_returns_expected_format(self):
         """Checking that the __str__ method is working as customed
