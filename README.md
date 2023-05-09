@@ -139,7 +139,10 @@ $
 &emsp;File(s):
 - &emsp;&emsp;&emsp;[file]() - file description
 
-## Author
+## Authors
 - Github - [omitogunjesufemi](https://github.com/omitogunjesufemi)
 - Twitter - [@omixcreative](https://twitter.com/omixcreative)
 - Linkedin - [@omitogunjesufemi](https://www.linkedin.com/in/omitogunjesufemi)
+
+- Github - [TechOgede](https://github.com/TechOgede)
+- Twitter - [@Silozumba](https://twitter.com/silozumba)
