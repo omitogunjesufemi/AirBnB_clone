@@ -1,0 +1,79 @@
+"""This module contains the various test for the BaseModel class, to assertain
+its functionality
+"""
+import unittest
+from models.base_model import BaseModel
+
+
+class TestBaseModel(unittest.TestCase):
+    """This Class contains the test suites for the BaseModel class
+    """
+
+    def setUp(self):
+        """SetUp method to initialize the BaseModel for each instance
+        """
+        self.base_model = BaseModel()
+
+    def test_uuid_is_present(self):
+        """Checking if uuid was initialized
+        """
+        self.assertTrue(self.base_model.id is not None)
+
+    def test_uuid_is_not_same_for_different_instance(self):
+        """Checking if uuid is not the same for different instance
+        """
+        base_model_2 = BaseModel()
+        self.assertNotEqual(self.base_model.id, base_model_2.id)
+
+    def test_created_at_is_present(self):
+        """Checking if created_at was initialized
+        """
+        self.assertTrue(self.base_model.created_at is not None)
+
+    def test_created_at_is_not_same_for_different_instance(self):
+        """Checking if created_at is not the smae for different instance
+        """
+        base_model_2 = BaseModel()
+        self.assertNotEqual(self.base_model.created_at, base_model_2.created_at)
+
+    def test_updated_at_is_present(self):
+        """Checking if updated_at was initialized
+        """
+        self.assertTrue(self.base_model.updated_at is not None)
+
+    def test_updated_at_is_not_same_for_different_instance(self):
+        """Checking if updated_at is not the smae for different instance
+        """
+        base_model_2 = BaseModel()
+        self.assertNotEqual(self.base_model.updated_at, base_model_2.updated_at)
+
+    def test_string_representation_returns_expected_format(self):
+        """Checking that the __str__ method is working as customed
+        """
+        expected_id = self.base_model.id
+        expected_dict = self.base_model.__dict__
+        expected_output = "[BaseModel] ({}) {}".format(expected_id,
+                                                       expected_dict)
+        self.assertEqual(self.base_model.__str__(), expected_output)
+
+    def test_save_updates_the_expected_fields(self):
+        """Checking that it updates updated_at with current datetime
+        """
+        old_updated_at = self.base_model.updated_at
+        self.base_model.save()
+        self.assertNotEqual(self.base_model.updated_at, old_updated_at)
+
+    def test_to_dict_contains_all_keys_values_of_dict_of_instance(self):
+        """Checking all keys/values of the __dict__ of the instance is present
+        """
+        self.base_model.name = 'My First Model'
+        self.base_model.my_number = 89
+        base_id = self.base_model.id
+        base_created_at = self.base_model.created_at.isoformat()
+        base_updated_at = self.base_model.updated_at.isoformat()
+        expected_output = {'id': base_id,
+                           'created_at': base_created_at,
+                           'updated_at': base_updated_at,
+                           'name': 'My First Model', 'my_number': 89,
+                           '__class__': 'BaseModel'}
+        self.assertEqual(self.base_model.to_dict(), expected_output)
