@@ -36,10 +36,11 @@ class FileStorage():
                 json_str = json_file.read()
             json_str = json_str[:-1]
             json_str_new = json.dumps(new_dict)[1:]
-            json_str_new = json_str + ', ' + json_str_new
+            json_str_new = json_str + ', ' + json_str_new + '\n'
 
         else:
             json_str_new = json.dumps(new_dict)
+            json_str_new = json_str_new + '\n'
 
         with open(self.__file_path, 'w', encoding='utf-8') as json_file:
             json_file.write(json_str_new)
