@@ -11,29 +11,31 @@ class FileStorage():
         store the file path and
         a list of objects after deserialisation.
         '''
-    _file_path = 'file.json'
-    _objects = {}
+    __file_path = 'file.json'
+    __objects = {}
 
     def all(self):
         ''' Returns the dictionary, _objects '''
-        return self._objects
+        return self.__objects
 
     def new(self, obj):
         ''' sets in __objects the obj with key <obj class name>.id '''
         key = f'{obj.__class__.__name__}.{obj.id}'
-        self._objects[key] = obj.to_dict()
+        self.__objects[key] = obj
 
     def save(self):
         ''' serializes __objects to the JSON file (path: __file_path) '''
-        with open(self._file_path, 'w', encoding='utf-8') as json_file:
-            str = json.dumps(self._objects)
-            print(str)
+        with open(self.__file_path, 'w', encoding='utf-8') as json_file:
+            new_dict = {}
+            for key, value in self.__objects.items():
+                new_dict[key] = value.to_dict()
+            json.dump(new_dict, json_file)
 
     def reload(self):
         ''' deserializes the JSON file to __objects (only if the JSON file (__file_path) exists)
             if the file doesnt exist, no exception is raised '''
         try:
-            json_file = open(self._file_path, 'r', encoding='utf-8')
+            json_file = open(self.__file_path, 'r', encoding='utf-8')
         except:
             pass
         else:
