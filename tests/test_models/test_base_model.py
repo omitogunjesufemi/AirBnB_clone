@@ -50,6 +50,13 @@ class TestBaseModel(unittest.TestCase):
         self.assertNotEqual(self.base_model.updated_at,
                             base_model_2.updated_at)
 
+    def test_save_updates_the_expected_fields(self):
+        """Checking that it updates updated_at with current datetime
+        """
+        old_updated_at = self.base_model.updated_at
+        self.base_model.save()
+        self.assertNotEqual(self.base_model.updated_at, old_updated_at)
+
     def test_string_representation_returns_expected_format(self):
         """Checking that the __str__ method is working as customed
         """
@@ -58,13 +65,6 @@ class TestBaseModel(unittest.TestCase):
         expected_output = "[BaseModel] ({}) {}".format(expected_id,
                                                        expected_dict)
         self.assertEqual(self.base_model.__str__(), expected_output)
-
-    def test_save_updates_the_expected_fields(self):
-        """Checking that it updates updated_at with current datetime
-        """
-        old_updated_at = self.base_model.updated_at
-        self.base_model.save()
-        self.assertNotEqual(self.base_model.updated_at, old_updated_at)
 
     def test_to_dict_contains_all_keys_values_of_dict_of_instance(self):
         """Checking all keys/values of the __dict__ of the instance is present
