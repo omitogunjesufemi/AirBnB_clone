@@ -34,9 +34,15 @@ class FileStorage():
         if os.path.exists(self.__file_path):
             with open(self.__file_path, 'r', encoding='utf-8') as json_file:
                 json_str = json_file.read()
+
             json_str = json_str[:-1]
+<<<<<<< HEAD
+            json_str_dict = json.dumps(new_dict)[1:]
+            json_str_new = json_str + ', ' + json_str_dict
+=======
             json_str_new = json.dumps(new_dict)[1:]
             json_str_new = json_str + ', ' + json_str_new + '\n'
+>>>>>>> e4e7506031f7e861613f67bd3f1fe98302982d8e
 
         else:
             json_str_new = json.dumps(new_dict)
@@ -54,8 +60,11 @@ class FileStorage():
         except FileNotFoundError:
             pass
         else:
-            dict_objs = json.load(json_file)
+            dict_from_file = json.load(json_file)
+
             from models.base_model import BaseModel
-            for key, value in dict_objs.items():
-                self.__objects[key] = BaseModel(**value)
+            for key, value in dict_from_file.items():
+                dict_from_file[key] = BaseModel(**value)
+
+            self.__objects = dict_from_file
             json_file.close()
