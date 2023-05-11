@@ -9,7 +9,8 @@ class HBNBCommand(cmd.Cmd):
     ''' This class contains the entry point for the command line interpreter'''
     prompt = '(hbnb) '
 
-    classes = ['BaseModel']
+    classes = ['BaseModel', 'User', 'State',
+               'City', 'Amenity', 'Place', 'Review']
 
     def do_quit(self, arg):
         ''' Exits tihe command line interpreter '''
@@ -28,11 +29,11 @@ class HBNBCommand(cmd.Cmd):
             and prints the id '''
         line = line.split()
         if not line:
-           print('** class name missing **')
-           return
+            print('** class name missing **')
+            return
         if line[0] not in self.classes:
-           print('** class doesn\'t exist **')
-           return
+            print('** class doesn\'t exist **')
+            return
         inst = eval(f'{line[0]}()')
         inst.save()
         print(inst.id)
@@ -70,24 +71,24 @@ class HBNBCommand(cmd.Cmd):
             print('**instance id missing **')
         key = f'{line[0]}.{line[1]}'
         if key not in storage.all():
-            print ('** no instance found **')
+            print('** no instance found **')
             return
         del storage.all()[key]
-        #storage.save()
+        # storage.save()
 
     def do_all(self, line):
         '''Prints all string representation of all instances
            based or not on the class name.
            Ex: $ all BaseModel or $ all '''
         if line:
-            if line[0]  not in self.classes:
+            if line[0] not in self.classes:
                 print('** class doesn\'t exist **')
                 return
         inst_list = []
 
         for key, value in storage.all():
             class_name = key.split('.')[0]
-            inst =  eval(f'{class_name}(**{value})')
+            inst = eval(f'{class_name}(**{value})')
             inst_list.append(str(inst))
 
         print(inst_list)
@@ -119,6 +120,8 @@ class HBNBCommand(cmd.Cmd):
         key = f'{line[0]}.{line[1]}'
         inst_dict = storage.all()[key]
         inst_dict[line[2]] = line[3]
+        # storage.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
