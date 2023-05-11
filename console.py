@@ -117,7 +117,8 @@ class HBNBCommand(cmd.Cmd):
             print('** value missing **')
             return
         key = f'{line[0]}.{line[1]}'
-        storage.all()[key]
+        inst_dict = storage.all()[key]
+        inst_dict[line[2]] = line[3]
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
