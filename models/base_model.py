@@ -39,11 +39,32 @@ class BaseModel:
             self.updated_at = self.created_at
             storage.new(self)
 
+    @staticmethod
+    def get_custom_attrs(inst):
+        ''' Returns a dict containing the only the custom class attrs.
+            The dictionary is created from the return value
+            of 'vars(inst.__class__.__name__) '''
+        from models.user import User
+        vars_call = 'vars(' + inst.__class__.__name__ + ')'
+        attrs = eval(vars_call)
+        custom_attrs = {}
+        for key in attrs:
+            if not key.startswith('__'):
+                custom_attrs[key] = attrs[key]
+
+        return (custom_attrs)
+
     def __str__(self):
         """String representation of the BaseModel Class
         """
-        return ("[{}] ({}) {}".format(self.__class__.__name__, self.id,
-                                      self.__dict__))
+        if self.__class__.__name__ != 'BaseModel':
+            custom_attrs = BaseModel.get_custom_attrs(self)
+            custom_attrs.update(self.__dict__.copy())
+            str_ = f'[{self.__class__.__name__}] ({self.id}) {custom_attrs}'
+        else:
+            str_ = f'[{self.__class__.__name__}] ({self.id}) {self.__dict__}'
+
+        return (str_)
 
     def save(self):
         """Public instance method that updates the public instance attribute
@@ -60,4 +81,7 @@ class BaseModel:
         new_dictionary['__class__'] = self.__class__.__name__
         new_dictionary['updated_at'] = self.updated_at.isoformat()
         new_dictionary['created_at'] = self.created_at.isoformat()
+
+        if self.__class__.__name__ != 'BaseModel':
+            new_dictionary.update(BaseModel.get_custom_attrs(self))
         return (new_dictionary)

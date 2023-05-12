@@ -3,6 +3,11 @@
 import cmd
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 from models import storage
 
 
@@ -10,8 +15,10 @@ class HBNBCommand(cmd.Cmd):
     ''' This class contains the entry point for the command line interpreter'''
     prompt = '(hbnb) '
 
-    classes = ['BaseModel', 'User', 'State',
-               'City', 'Amenity', 'Place', 'Review']
+    classes = {'BaseModel': BaseModel,
+               'User': User, 'State': State,
+               'City': City, 'Amenity': Amenity,
+               'Place': Place, 'Review': Review}
 
     # --- Default Methods ---
     def do_quit(self, arg):
@@ -38,8 +45,7 @@ class HBNBCommand(cmd.Cmd):
         if line[0] not in self.classes:
             print('** class doesn\'t exist **')
             return
-        call_to_class_str = line[0] + '()'
-        inst = eval(call_to_class_str)
+        inst = self.classes[line[0]]()
         inst.save()
         print(inst.id)
 
@@ -60,11 +66,8 @@ class HBNBCommand(cmd.Cmd):
             print('** no instance found **')
             return
 
-        inst_dict = storage.all()[f'{line[0]}.{line[1]}']
-        if line[0] == "BaseModel":
-            inst = BaseModel(**inst_dict.to_dict())
-        elif line[0] == "User":
-            inst = User(**inst_dict.to_dict())
+        inst = storage.all()[f'{line[0]}.{line[1]}']
+        inst = self.classes[line[0]](**inst.to_dict())
         print(inst)
 
     def do_destroy(self, line):
@@ -95,16 +98,17 @@ class HBNBCommand(cmd.Cmd):
                 print('** class doesn\'t exist **')
                 return
 
-        class_name = line[0]
         inst_list = []
         all_objects = storage.all().copy()
         for key, value in all_objects.items():
-            if class_name == "BaseModel":
-                inst = BaseModel(**value.to_dict())
-            elif class_name == "User":
-                inst = User(**value.to_dict())
-            inst_list.append(str(inst))
-
+            if line:
+                if key.startswith(line[0]):
+                    inst = self.classes[line[0]](**value.to_dict())
+                    inst_list.append(str(inst))
+            else:
+                class_name = key.split('.')[0]
+                inst = self.classes[class_name](**value.to_dict())
+                inst_list.append(str(inst))
         print(inst_list)
 
     def do_update(self, line):
@@ -133,7 +137,7 @@ class HBNBCommand(cmd.Cmd):
             return
         key = f'{line[0]}.{line[1]}'
         inst = storage.all()[key]
-        setattr(inst, line[2], line[3])
+        setattr(self.classes[inst.__class__.__name__], line[2], line[3])
         inst.save()
 
 
