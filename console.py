@@ -38,11 +38,8 @@ class HBNBCommand(cmd.Cmd):
         if line[0] not in self.classes:
             print('** class doesn\'t exist **')
             return
-        #inst = eval(f'{line[0]}()')
-        if line[0] == "BaseModel":
-            inst = BaseModel()
-        elif line[0] == "User":
-            inst = User()
+        call_to_class_str = line[0] + '()'
+        inst = eval(call_to_class_str)
         inst.save()
         print(inst.id)
 
@@ -135,9 +132,9 @@ class HBNBCommand(cmd.Cmd):
             print('** value missing **')
             return
         key = f'{line[0]}.{line[1]}'
-        inst_dict = storage.all()[key]
-        inst_dict[line[2]] = line[3]
-        # storage.save()
+        inst = storage.all()[key]
+        setattr(inst, line[2], line[3])
+        inst.save()
 
 
 if __name__ == '__main__':
