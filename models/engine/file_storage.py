@@ -31,25 +31,8 @@ class FileStorage():
         for key, value in self.__objects.items():
             new_dict[key] = value.to_dict()
 
-        if os.path.exists(self.__file_path):
-            with open(self.__file_path, 'r', encoding='utf-8') as json_file:
-                json_str = json_file.read()
-
-            json_str = json_str[:-1]
-<<<<<<< HEAD
-            json_str_dict = json.dumps(new_dict)[1:]
-            json_str_new = json_str + ', ' + json_str_dict
-=======
-            json_str_new = json.dumps(new_dict)[1:]
-            json_str_new = json_str + ', ' + json_str_new + '\n'
->>>>>>> e4e7506031f7e861613f67bd3f1fe98302982d8e
-
-        else:
-            json_str_new = json.dumps(new_dict)
-            json_str_new = json_str_new + '\n'
-
         with open(self.__file_path, 'w', encoding='utf-8') as json_file:
-            json_file.write(json_str_new)
+            json.dump(new_dict, json_file)
 
     def reload(self):
         ''' deserializes the JSON file to __objects

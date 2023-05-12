@@ -29,9 +29,11 @@ class TestFileStorage(unittest.TestCase):
     def test_new(self):
         ''' Test cases for the method, new '''
         inst2 = BaseModel()
+        self.inst.new(inst2)
         self.assertIn(f'{type(inst2).__name__}.{inst2.id}', self.inst.all())
         for value in self.inst.all().values():
             self.assertTrue(type(value).__name__ == 'BaseModel')
+        self.inst.all().pop(f'{type(inst2).__name__}.{inst2.id}')
 
     def test_save(self):
         ''' Test cases for the method, save '''
