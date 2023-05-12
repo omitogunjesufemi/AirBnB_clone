@@ -3,6 +3,11 @@
 import cmd
 from models.base_model import BaseModel
 from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 from models import storage
 
 
@@ -20,6 +25,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_EOF(self, arg):
         ''' Exits the command line interpreter '''
+        print()
         return True
 
     # --- Overridden Methods ---
@@ -60,12 +66,8 @@ class HBNBCommand(cmd.Cmd):
             print('** no instance found **')
             return
 
-        inst_dict = storage.all()[f'{line[0]}.{line[1]}']
-        if line[0] == "BaseModel":
-            inst = BaseModel(**inst_dict.to_dict())
-        elif line[0] == "User":
-            inst = User(**inst_dict.to_dict())
-        print(inst)
+        inst_obj = storage.all()[f'{line[0]}.{line[1]}']
+        print(inst_obj)
 
     def do_destroy(self, line):
         ''' Deletes an instance based on the class name
@@ -89,23 +91,23 @@ class HBNBCommand(cmd.Cmd):
         '''Prints all string representation of all instances
            based or not on the class name.
            Ex: $ all BaseModel or $ all '''
+
+        inst_list = []
         if line:
             line = line.split()
             if line[0] not in self.classes:
                 print('** class doesn\'t exist **')
                 return
-
-        class_name = line[0]
-        inst_list = []
-        all_objects = storage.all().copy()
-        for key, value in all_objects.items():
-            if class_name == "BaseModel":
-                inst = BaseModel(**value.to_dict())
-            elif class_name == "User":
-                inst = User(**value.to_dict())
-            inst_list.append(str(inst))
-
-        print(inst_list)
+            else:
+                class_name = line[0]
+                for key, value in storage.all().items():
+                    if class_name == key.split('.')[0]:
+                        inst_list.append(str(value))
+                print(inst_list)
+        else:
+            for key, value in storage.all().items():
+                inst_list.append(str(value))
+            print(inst_list)
 
     def do_update(self, line):
         ''' Updates an instance based on the class name and id
@@ -133,8 +135,22 @@ class HBNBCommand(cmd.Cmd):
             return
         key = f'{line[0]}.{line[1]}'
         inst = storage.all()[key]
+        line[3] = line[3].strip('"')
         setattr(inst, line[2], line[3])
         inst.save()
+
+    # --- Tab Completion methods ---
+    def complete_create(self, text, line, begidx, endidx):
+        """Give completion when tabs is pressed
+        """
+        completions = []
+        if text:
+            for c in self.classes:
+                if c.startswith(text):
+                    completions.append(c)
+        else:
+            completions = self.classes[:]
+        return completions
 
 
 if __name__ == '__main__':
