@@ -12,7 +12,7 @@ class State(BaseModel):
     """
     name = ""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """This initialises the State class
         """
-        super().__init__(self)
+        super().__init__(**kwargs)

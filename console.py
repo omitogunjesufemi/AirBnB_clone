@@ -2,6 +2,7 @@
 ''' This module defines the command line interpreter '''
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -12,6 +13,7 @@ class HBNBCommand(cmd.Cmd):
     classes = ['BaseModel', 'User', 'State',
                'City', 'Amenity', 'Place', 'Review']
 
+    # --- Default Methods ---
     def do_quit(self, arg):
         ''' Exits tihe command line interpreter '''
         return True
@@ -20,10 +22,12 @@ class HBNBCommand(cmd.Cmd):
         ''' Exits the command line interpreter '''
         return True
 
+    # --- Overridden Methods ---
     def emptyline(self):
         ''' Executed when an empty line is passed as argument '''
         pass
 
+    # --- Program Methods ---
     def do_create(self, line):
         '''creates an instance of Basemodel, saves it(to the JSON file),
             and prints the id '''
@@ -34,7 +38,11 @@ class HBNBCommand(cmd.Cmd):
         if line[0] not in self.classes:
             print('** class doesn\'t exist **')
             return
-        inst = eval(f'{line[0]}()')
+        #inst = eval(f'{line[0]}()')
+        if line[0] == "BaseModel":
+            inst = BaseModel()
+        elif line[0] == "User":
+            inst = User()
         inst.save()
         print(inst.id)
 
@@ -54,8 +62,12 @@ class HBNBCommand(cmd.Cmd):
         if f'{line[0]}.{line[1]}' not in storage.all():
             print('** no instance found **')
             return
+
         inst_dict = storage.all()[f'{line[0]}.{line[1]}']
-        inst = eval(f'{line[0]}(**{inst_dict})')
+        if line[0] == "BaseModel":
+            inst = BaseModel(**inst_dict.to_dict())
+        elif line[0] == "User":
+            inst = User(**inst_dict.to_dict())
         print(inst)
 
     def do_destroy(self, line):
@@ -73,22 +85,27 @@ class HBNBCommand(cmd.Cmd):
         if key not in storage.all():
             print('** no instance found **')
             return
-        del storage.all()[key]
-        # storage.save()
+        storage.all().pop(key)
+        storage.save()
 
     def do_all(self, line):
         '''Prints all string representation of all instances
            based or not on the class name.
            Ex: $ all BaseModel or $ all '''
         if line:
+            line = line.split()
             if line[0] not in self.classes:
                 print('** class doesn\'t exist **')
                 return
-        inst_list = []
 
-        for key, value in storage.all():
-            class_name = key.split('.')[0]
-            inst = eval(f'{class_name}(**{value})')
+        class_name = line[0]
+        inst_list = []
+        all_objects = storage.all().copy()
+        for key, value in all_objects.items():
+            if class_name == "BaseModel":
+                inst = BaseModel(**value.to_dict())
+            elif class_name == "User":
+                inst = User(**value.to_dict())
             inst_list.append(str(inst))
 
         print(inst_list)

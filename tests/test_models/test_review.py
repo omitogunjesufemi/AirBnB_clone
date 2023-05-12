@@ -3,6 +3,7 @@ its functionality
 """
 import unittest
 from models.review import Review
+from datetime import datetime
 
 
 class TestReview(unittest.TestCase):
@@ -14,9 +15,21 @@ class TestReview(unittest.TestCase):
         """
         self.review = Review()
 
-    def test_state_id_and_name_are_empty_string(self):
+    def test_place_id_user_id_and_text_are_empty_string(self):
         """Checks if the class attributes are empty string
         """
         self.assertEqual(self.review.place_id, "")
         self.assertEqual(self.review.user_id, "")
         self.assertEqual(self.review.text, "")
+
+    def test_create_review_with_kwargs(self):
+        """Creates with kwargs
+        """
+        review_dict = self.review.to_dict()
+        new_review = Review(**review_dict)
+        self.assertTrue(type(new_review.created_at) is datetime)
+        self.assertTrue(type(new_review.updated_at) is datetime)
+        self.assertTrue(new_review is not self.review)
+        self.assertEqual(self.review.place_id, "")
+        self.assertEqual(new_review.user_id, "")
+        self.assertEqual(new_review.text, "")

@@ -23,3 +23,16 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.user.password, "")
         self.assertEqual(self.user.first_name, "")
         self.assertEqual(self.user.last_name, "")
+
+    def test_create_user_with_kwargs(self):
+        """Creates with kwargs
+        """
+        user_dict = self.user.to_dict()
+        new_user = User(**user_dict)
+        self.assertTrue(type(new_user.created_at) is datetime)
+        self.assertTrue(type(new_user.updated_at) is datetime)
+        self.assertTrue(new_user is not self.user)
+        self.assertEqual(new_user.email, "")
+        self.assertEqual(new_user.password, "")
+        self.assertEqual(new_user.first_name, "")
+        self.assertEqual(new_user.last_name, "")

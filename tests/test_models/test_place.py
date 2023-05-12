@@ -3,6 +3,7 @@ its functionality
 """
 import unittest
 from models.place import Place
+from datetime import datetime
 
 
 class TestPlace(unittest.TestCase):
@@ -28,3 +29,23 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(self.place.latitude, 0.0)
         self.assertEqual(self.place.longitude, 0.0)
         self.assertEqual(self.place.amenity_ids, [])
+
+    def test_create_place_with_kwargs(self):
+        """Creates with kwargs
+        """
+        place_dict = self.place.to_dict()
+        new_place = Place(**place_dict)
+        self.assertTrue(type(new_place.created_at) is datetime)
+        self.assertTrue(type(new_place.updated_at) is datetime)
+        self.assertTrue(new_place is not self.place)
+        self.assertEqual(new_place.city_id, "")
+        self.assertEqual(new_place.user_id, "")
+        self.assertEqual(new_place.name, "")
+        self.assertEqual(new_place.description, "")
+        self.assertEqual(new_place.number_rooms, 0)
+        self.assertEqual(new_place.number_bathrooms, 0)
+        self.assertEqual(new_place.max_guest, 0)
+        self.assertEqual(new_place.price_by_night, 0)
+        self.assertEqual(new_place.latitude, 0.0)
+        self.assertEqual(new_place.longitude, 0.0)
+        self.assertEqual(new_place.amenity_ids, [])

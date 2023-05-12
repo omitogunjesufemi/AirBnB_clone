@@ -33,7 +33,7 @@ class Place(BaseModel):
     longitude = 0.0
     amenity_ids = []
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """This initialises the Place class
         """
-        super().__init__(self)
+        super().__init__(**kwargs)

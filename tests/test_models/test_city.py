@@ -3,6 +3,7 @@ its functionality
 """
 import unittest
 from models.city import City
+from datetime import datetime
 
 
 class TestCity(unittest.TestCase):
@@ -19,3 +20,14 @@ class TestCity(unittest.TestCase):
         """
         self.assertEqual(self.city.state_id, "")
         self.assertEqual(self.city.name, "")
+
+    def test_create_city_with_kwargs(self):
+        """Creates with kwargs
+        """
+        city_dict = self.city.to_dict()
+        new_city = City(**city_dict)
+        self.assertTrue(type(new_city.created_at) is datetime)
+        self.assertTrue(type(new_city.updated_at) is datetime)
+        self.assertTrue(new_city is not self.city)
+        self.assertEqual(new_city.state_id, "")
+        self.assertEqual(new_city.name, "")
