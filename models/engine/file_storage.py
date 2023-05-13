@@ -31,7 +31,7 @@ class FileStorage():
         for key, value in self.__objects.items():
             new_dict[key] = value.to_dict()
 
-        with open(self.__file_path, 'w', encoding='utf-8') as json_file:
+        with open(self.__file_path, 'w+', encoding='utf-8') as json_file:
             json.dump(new_dict, json_file)
 
     def reload(self):
@@ -44,10 +44,15 @@ class FileStorage():
             pass
         else:
             dict_from_file = json.load(json_file)
-
-            from models.base_model import BaseModel
             for key, value in dict_from_file.items():
-                dict_from_file[key] = BaseModel(**value)
-
-            self.__objects = dict_from_file
+                class_name = key.split(".")
+                from models.base_model import BaseModel
+                from models.user import User
+                from models.amenity import Amenity
+                from models.place import Place
+                from models.city import City
+                from models.state import State
+                from models.review import Review
+                dict_from_file[key] = eval(class_name[0] + '(**value)')
+            self.__object = dict_from_file
             json_file.close()
