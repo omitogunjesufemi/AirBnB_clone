@@ -46,10 +46,13 @@ class FileStorage():
             dict_from_file = json.load(json_file)
             for key, value in dict_from_file.items():
                 class_name = key.split(".")
-                if class_name[0] == "BaseModel":
-                    from models.base_model import BaseModel
-                    self.new(BaseModel(**value))
-                elif class_name[0] == "User":
-                    from models.user import User
-                    self.new(User(**value))
+                from models.base_model import BaseModel
+                from models.user import User
+                from models.amenity import Amenity
+                from models.place import Place
+                from models.city import City
+                from models.state import State
+                from models.review import Review
+                dict_from_file[key] = eval(class_name[0] + '(**value)')
+            self.__object = dict_from_file
             json_file.close()

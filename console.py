@@ -15,8 +15,10 @@ class HBNBCommand(cmd.Cmd):
     ''' This class contains the entry point for the command line interpreter'''
     prompt = '(hbnb) '
 
-    classes = ['BaseModel', 'User', 'State',
-               'City', 'Amenity', 'Place', 'Review']
+    classes = {'BaseModel': BaseModel,
+               'User': User, 'State': State,
+               'City': City, 'Amenity': Amenity,
+               'Place': Place, 'Review': Review}
 
     # --- Default Methods ---
     def do_quit(self, arg):
@@ -44,8 +46,7 @@ class HBNBCommand(cmd.Cmd):
         if line[0] not in self.classes:
             print('** class doesn\'t exist **')
             return
-        call_to_class_str = line[0] + '()'
-        inst = eval(call_to_class_str)
+        inst = self.classes[line[0]]()
         inst.save()
         print(inst.id)
 
@@ -91,23 +92,21 @@ class HBNBCommand(cmd.Cmd):
         '''Prints all string representation of all instances
            based or not on the class name.
            Ex: $ all BaseModel or $ all '''
-
-        inst_list = []
         if line:
             line = line.split()
             if line[0] not in self.classes:
                 print('** class doesn\'t exist **')
                 return
+
+        inst_list = []
+        for key, value in storage.all().items():
+            if line:
+                if key.startswith(line[0]):
+                    inst_list.append(str(value))
             else:
-                class_name = line[0]
-                for key, value in storage.all().items():
-                    if class_name == key.split('.')[0]:
-                        inst_list.append(str(value))
-                print(inst_list)
-        else:
-            for key, value in storage.all().items():
+                class_name = key.split('.')[0]
                 inst_list.append(str(value))
-            print(inst_list)
+        print(inst_list)
 
     def do_update(self, line):
         ''' Updates an instance based on the class name and id
@@ -138,20 +137,6 @@ class HBNBCommand(cmd.Cmd):
         line[3] = line[3].strip('"')
         setattr(inst, line[2], line[3])
         inst.save()
-
-    # --- Tab Completion methods ---
-    def complete_create(self, text, line, begidx, endidx):
-        """Give completion when tabs is pressed
-        """
-        completions = []
-        if text:
-            for c in self.classes:
-                if c.startswith(text):
-                    completions.append(c)
-        else:
-            completions = self.classes[:]
-        return completions
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
