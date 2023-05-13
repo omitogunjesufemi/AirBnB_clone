@@ -21,6 +21,37 @@ class HBNBCommand(cmd.Cmd):
                'Place': Place, 'Review': Review}
 
     # --- Default Methods ---
+    def precmd(self, line):
+        ''' Reformats input formatted like function calls
+            Ex: <class name>.all() would be formatted to => all <class name>
+
+            Ex 2: <class name>.show(<id>) would be formatted to =>
+            show <class name> <id>
+        '''
+        if line.endswith('()'):
+            line = line.strip().strip('()')
+            class_and_cmd = line.split('.')
+            class_ = class_and_cmd[0]
+            cmd = class_and_cmd[1]
+            line = cmd + ' ' + class_
+            return line
+
+        if line.endswith(')'):
+            line = line.strip().strip(')').split('(')
+            class_and_cmd = line[0].split('.')
+            class_ = class_and_cmd[0]
+            cmd = class_and_cmd[1]
+            id_and_attrs = line[1]
+
+            if '{' not in id_and_attrs:
+                id_and_attrs = id_and_attrs.replace(',', '')
+            else:
+                id_and_attrs = id_and_attrs.replace(',', '', 1)
+
+            line = cmd + ' ' + class_ + ' ' + id_and_attrs
+
+        return line
+
     def do_quit(self, arg):
         ''' Exits tihe command line interpreter '''
         return True
@@ -63,6 +94,7 @@ class HBNBCommand(cmd.Cmd):
         if len(line) == 1:
             print('** instance id missing **')
             return
+        line[1] = line[1].strip('"')
         if f'{line[0]}.{line[1]}' not in storage.all():
             print('** no instance found **')
             return
@@ -81,12 +113,23 @@ class HBNBCommand(cmd.Cmd):
             print('** class doesn\'t exist **')
         if len(line) == 1:
             print('**instance id missing **')
+        line[1] = line[1].strip('"')
         key = f'{line[0]}.{line[1]}'
         if key not in storage.all():
             print('** no instance found **')
             return
         storage.all().pop(key)
         storage.save()
+
+    def do_count(self, line):
+        '''Retrieves the number of instances of a classs '''
+
+        line = line.split()
+        count = 0
+        for key in storage.all():
+            if line[0].strip() in key:
+                count += 1
+        print(count)
 
     def do_all(self, line):
         '''Prints all string representation of all instances
@@ -113,7 +156,11 @@ class HBNBCommand(cmd.Cmd):
             by adding or updating attribute
             (save the change into the JSON file).
             Ex: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com"'''
-        line = line.split()
+
+        if '{' in line:
+            line = line.split(' ', 2)
+        else:
+            line = line.split()
         if not line:
             print('** class name missing **')
             return
@@ -123,20 +170,27 @@ class HBNBCommand(cmd.Cmd):
         if len(line) == 1:
             print('** instance id missing **')
             return
+        line[1] = line[1].strip('"')
         if f'{line[0]}.{line[1]}' not in storage.all():
             print('** no instance found **')
             return
         if len(line) == 2:
             print('** attribute name missing **')
             return
-        if len(line) == 3:
+        if len(line) == 3 and '{' not in line[2]:
             print('** value missing **')
             return
         key = f'{line[0]}.{line[1]}'
         inst = storage.all()[key]
-        line[3] = line[3].strip('"')
-        setattr(inst, line[2], line[3])
-        inst.save()
+        line[2] = line[2].strip()
+        if line[2].startswith('{') and line[2].endswith('}'):
+            dict_ = eval(line[2].replace('"', '\''))
+            for key, value in dict_.items():
+                setattr(inst, key, value)
+        else:
+            setattr(inst, line[2].strip('"'), line[3].strip('"'))
+            inst.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
