@@ -54,5 +54,5 @@ class FileStorage():
                 from models.state import State
                 from models.review import Review
                 self.new(eval(class_name[0] + '(**value)'))
-            # self.__object = dict_from_file
+            #self.__object = dict_from_file
             json_file.close()
