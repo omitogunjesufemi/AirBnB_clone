@@ -111,8 +111,10 @@ class HBNBCommand(cmd.Cmd):
             return
         if line[0] not in self.classes:
             print('** class doesn\'t exist **')
+            return
         if len(line) == 1:
             print('**instance id missing **')
+            return
         line[1] = line[1].strip('"')
         key = f'{line[0]}.{line[1]}'
         if key not in storage.all():
@@ -188,7 +190,7 @@ class HBNBCommand(cmd.Cmd):
             for key, value in dict_.items():
                 setattr(inst, key, eval(value))
         else:
-            setattr(inst, line[2].strip('"'), eval(line[3].strip('"')))
+            setattr(inst, line[2].strip('"'), line[3].strip('"'))
             inst.save()
 
 
