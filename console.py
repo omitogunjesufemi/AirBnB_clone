@@ -113,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
             print('** class doesn\'t exist **')
             return
         if len(line) == 1:
-            print('**instance id missing **')
+            print('** instance id missing **')
             return
         line[1] = line[1].strip('"')
         key = f'{line[0]}.{line[1]}'
