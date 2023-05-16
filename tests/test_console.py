@@ -16,44 +16,45 @@ class TestHBNBCommandConsole(unittest.TestCase):
         """Checks if it prints out the right message for help quit command
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HNBNBCommand().onecmd("help quit")
+            HBNBCommand().onecmd("help quit")
             output = f.getvalue()
-            expected_output = " Exits tihe command line interpreter"
+            expected_output = " Exits tihe command line interpreter \n"
             self.assertEqual(output, expected_output)
 
     def test_help_EOF(self):
         """Checks if it prints out the right message for help quit command
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HNBNBCommand().onecmd("help EOF")
+            HBNBCommand().onecmd("help EOF")
             output = f.getvalue()
-            expected_output = " Exits the command line interpreter"
+            expected_output = " Exits the command line interpreter \n"
             self.assertEqual(output, expected_output)
 
     def test_quit(self):
         """Checks if quit works
         """
-        self.assertTrue(HNBNBCommand().onecmd("quit"))
+        self.assertTrue(HBNBCommand().onecmd("quit"))
 
     def test_EOF(self):
         """Checks if EOF works
         """
-        self.assertTrue(HNBNBCommand().onecmd("EOF"))
+        self.assertTrue(HBNBCommand().onecmd("EOF"))
 
     def test_empty_line(self):
         """Checks if emptyline works
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HNBNBCommand().onecmd("")
+            HBNBCommand().onecmd("")
             output = f.getvalue()
-            expected_output = "\n"
+            expected_output = ""
             self.assertEqual(output, expected_output)
 
     def test_create_BaseModel(self):
         """Checks if create BaseModel works
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HNBNBCommand().onecmd("create BaseModel")
+            HBNBCommand().onecmd("create BaseModel")
             output = f.getvalue()
-            expected_output = "\n"
-            self.assertEqual(output, expected_output)
+            self.assertTrue(type(output) is str)
+            output = output.replace('-', '').replace('\n', '')
+            self.assertTrue(len(output) == 32)
