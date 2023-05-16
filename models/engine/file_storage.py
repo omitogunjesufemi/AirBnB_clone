@@ -53,6 +53,6 @@ class FileStorage():
                 from models.city import City
                 from models.state import State
                 from models.review import Review
-                self.new(eval(class_name[0] + '(**value)'))
-            #self.__object = dict_from_file
+                dict_from_file[key] = eval(class_name[0] + '(**value)')
+            self.__objects = dict_from_file
             json_file.close()
