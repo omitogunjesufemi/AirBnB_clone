@@ -188,7 +188,7 @@ class HBNBCommand(cmd.Cmd):
         if line[2].startswith('{') and line[2].endswith('}'):
             dict_ = eval(line[2].replace('"', '\''))
             for key, value in dict_.items():
-                setattr(inst, key, eval(value))
+                setattr(inst, key, value)
         else:
             setattr(inst, line[2].strip('"'), line[3].strip('"'))
             inst.save()
