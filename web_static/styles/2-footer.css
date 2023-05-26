@@ -1,0 +1,12 @@
+footer {
+    background-color: #00FF00;
+    height: 9.45%;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    top: 79.525%;
+}
+
+footer p {
+    display: inline-block;
+}
