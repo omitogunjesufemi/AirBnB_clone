@@ -3,12 +3,8 @@ footer {
     height: 60px;
     width: 100%;
     text-align: center;
-    position: sticky;
-    top: 100%;
+    position: fixed;
+    top: 93%;
     border-top: 1px solid #CCCCCC;
-}
-
-footer div {
-    display: inline-block;
-    vertical-align: middle;
+    padding-top: 25px;
 }
